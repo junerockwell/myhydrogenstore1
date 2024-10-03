@@ -21,6 +21,7 @@ export function PageLayout({
   isLoggedIn,
   publicStoreDomain,
 }) {
+  console.log('header: ', header);
   return (
     <Aside.Provider>
       <CartAside cart={cart} />
@@ -34,6 +35,7 @@ export function PageLayout({
           publicStoreDomain={publicStoreDomain}
         />
       )}
+
       <main>{children}</main>
       <Footer
         footer={footer}

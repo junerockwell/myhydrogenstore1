@@ -2,12 +2,18 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
-
+import {BESTSELLERS_COLLECTION_QUERY} from '../graphql/homepage/BestSellersCollectionQuery';
+import {RECENTLY_ADDED_PRODUCTS_QUERY} from '../graphql/homepage/RecentlyAddedProductsQuery';
+import {RECOMMENDED_PRODUCTS_QUERY2} from '../graphql/homepage/RecommendedProductsQuery';
+import {
+  NEWEST_COLLECTION_QUERY,
+  FEATURED_COLLECTION_QUERY,
+} from '../graphql/homepage/FeaturedCollectionQuery';
 /**
  * @type {MetaFunction}
  */
 export const meta = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'MyHydrogenStore1 | Home'}];
 };
 
 /**
@@ -16,11 +22,18 @@ export const meta = () => {
 export async function loader(args) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
-
+  console.log('deferredData: ', deferredData);
+  const alsoData = loadAdditionalDeferredData(args);
+  const bestSellersDefferedData = loadBestSellersDefferedData(args);
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return defer({
+    ...deferredData,
+    ...alsoData,
+    ...bestSellersDefferedData,
+    ...criticalData,
+  });
 }
 
 /**
@@ -29,13 +42,15 @@ export async function loader(args) {
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({context}) {
-  const [{collections}] = await Promise.all([
+  const criticalData = await Promise.all([
+    context.storefront.query(NEWEST_COLLECTION_QUERY),
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     // Add other queries here, so that they are loaded in parallel
   ]);
-
+  // console.log('collections 1: ', criticalData);
   return {
-    featuredCollection: collections.nodes[0],
+    newestCollection: criticalData[0].collections.nodes[0],
+    featuredCollection: criticalData[1].collection,
   };
 }
 
@@ -47,7 +62,7 @@ async function loadCriticalData({context}) {
  */
 function loadDeferredData({context}) {
   const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
+    .query(RECOMMENDED_PRODUCTS_QUERY2)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
@@ -59,13 +74,90 @@ function loadDeferredData({context}) {
   };
 }
 
+function loadAdditionalDeferredData({context}) {
+  const recentlyAddedProducts = context.storefront
+    .query(RECENTLY_ADDED_PRODUCTS_QUERY)
+    .catch((error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
+    });
+
+  return {
+    recentlyAddedProducts,
+  };
+}
+
+function loadBestSellersDefferedData({context}) {
+  const bestSellersCollection = context.storefront
+    .query(BESTSELLERS_COLLECTION_QUERY)
+    .catch((error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
+    });
+
+  return {
+    bestSellersCollection,
+  };
+}
+
 export default function Homepage() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
+  console.log('xOx: ', data);
   return (
     <div className="home">
+      Hello
       <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <BestSellersCollection
+        title="Best Sellers"
+        products={data.bestSellersCollection}
+      />
+      <RecommendedProducts
+        title="Recently Added"
+        products={data.recentlyAddedProducts}
+      />
+      <RecommendedProducts
+        title="Recommended Prods"
+        products={data.recommendedProducts}
+      />
+    </div>
+  );
+}
+
+function BestSellersCollection({title, products}) {
+  return (
+    <div className="recommended-products">
+      <h2>{title}</h2>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={products}>
+          {(response) => (
+            <div className="recommended-products-grid">
+              {response
+                ? response.collection.products.nodes.map((product) => (
+                    <Link
+                      key={product.id}
+                      className="recommended-product"
+                      to={`/products/${product.handle}`}
+                    >
+                      <Image
+                        data={product.images.nodes[0]}
+                        aspectRatio="1/1"
+                        sizes="(min-width: 45em) 20vw, 50vw"
+                      />
+                      <h4>{product.title}</h4>
+                      <small>
+                        <Money data={product.priceRange.minVariantPrice} />
+                      </small>
+                    </Link>
+                  ))
+                : null}
+            </div>
+          )}
+        </Await>
+      </Suspense>
+      <br />
     </div>
   );
 }
@@ -98,10 +190,10 @@ function FeaturedCollection({collection}) {
  *   products: Promise<RecommendedProductsQuery | null>;
  * }}
  */
-function RecommendedProducts({products}) {
+function RecommendedProducts({title, products}) {
   return (
     <div className="recommended-products">
-      <h2>Recommended Products</h2>
+      <h2>{title}</h2>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
@@ -133,60 +225,6 @@ function RecommendedProducts({products}) {
     </div>
   );
 }
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-`;
-
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
-      }
-    }
-  }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-`;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */

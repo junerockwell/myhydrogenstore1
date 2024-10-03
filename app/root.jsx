@@ -58,10 +58,12 @@ export function links() {
  */
 export async function loader(args) {
   // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
+  const deferredData = await loadDeferredData(args);
 
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
+
+  console.log('criticalData: ', criticalData);
 
   const {storefront, env} = args.context;
 
@@ -96,11 +98,13 @@ async function loadCriticalData({context}) {
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+        headerMenuHandle: 'my-menu', // Adjust to your header menu handle
       },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
+
+  console.log('xxx header: ', header);
 
   return {header};
 }
@@ -141,7 +145,7 @@ export function Layout({children}) {
   const nonce = useNonce();
   /** @type {RootLoader} */
   const data = useRouteLoaderData('root');
-
+  console.log('data: ', data);
   return (
     <html lang="en">
       <head>

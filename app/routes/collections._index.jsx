@@ -52,7 +52,7 @@ export default function Collections() {
 
   return (
     <div className="collections">
-      <h1>Collections</h1>
+      <h1>Collections hello</h1>
       <PaginatedResourceSection
         connection={collections}
         resourcesClassName="collections-grid"

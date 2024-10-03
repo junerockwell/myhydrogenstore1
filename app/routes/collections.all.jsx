@@ -8,7 +8,7 @@ import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
  * @type {MetaFunction<typeof loader>}
  */
 export const meta = () => {
-  return [{title: `Hydrogen | Products`}];
+  return [{title: `MyHydrogenStore | Products`}];
 };
 
 /**
@@ -60,7 +60,7 @@ export default function Collection() {
 
   return (
     <div className="collection">
-      <h1>Products</h1>
+      <h1>Productsx</h1>
       <PaginatedResourceSection
         connection={products}
         resourcesClassName="products-grid"
