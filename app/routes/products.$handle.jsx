@@ -130,6 +130,7 @@ function redirectToFirstVariant({product, request}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product, variants} = useLoaderData();
+  console.log('product: ', product);
   const selectedVariant = useOptimisticVariant(
     product.selectedVariant,
     variants,
@@ -257,6 +258,16 @@ const PRODUCT_FRAGMENT = `#graphql
     seo {
       description
       title
+    }
+    images(first: 10) {
+      nodes {
+        __typename
+        id
+        url
+        altText
+        width
+        height
+      }
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
