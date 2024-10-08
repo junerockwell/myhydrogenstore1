@@ -258,6 +258,16 @@ const PRODUCT_FRAGMENT = `#graphql
       description
       title
     }
+    images(first: 10) {
+      nodes {
+        __typename
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 `;
