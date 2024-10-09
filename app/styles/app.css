@@ -155,7 +155,7 @@ button.reset:hover:not(:has(> *)) {
   padding: 0 1rem;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 }
 
 .header-menu-mobile-toggle {
@@ -418,11 +418,13 @@ button.reset:hover:not(:has(> *)) {
   height: auto;
   width: 100%;
 }
+.product-image-slider .swiper-wrapper {
+}
 
 .product-main {
   align-self: start;
   position: sticky;
-  top: 6rem;
+  /* top: 6rem; */
 }
 
 .product-price-on-sale {

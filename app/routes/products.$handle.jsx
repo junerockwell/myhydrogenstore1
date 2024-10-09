@@ -9,7 +9,7 @@ import {
 import {getVariantUrl} from '~/lib/variants';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
-import {ProductGallery} from '~/components/ProductImages/ProductImages';
+import ProductImages from '~/components/ProductImages';
 import {ProductForm} from '~/components/ProductForm';
 
 /**
@@ -141,7 +141,7 @@ export default function Product() {
   return (
     <div className="product">
       {images && images.nodes.length > 0 ? (
-        <ProductGallery images={images.nodes} />
+        <ProductImages images={images.nodes} />
       ) : (
         <ProductImage image={selectedVariant?.image} />
       )}
