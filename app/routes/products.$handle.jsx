@@ -9,6 +9,7 @@ import {
 import {getVariantUrl} from '~/lib/variants';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
+import {ProductGallery} from '~/components/ProductImages/ProductImages';
 import {ProductForm} from '~/components/ProductForm';
 
 /**
@@ -130,17 +131,20 @@ function redirectToFirstVariant({product, request}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product, variants} = useLoaderData();
-  console.log('product: ', product);
   const selectedVariant = useOptimisticVariant(
     product.selectedVariant,
     variants,
   );
 
-  const {title, descriptionHtml} = product;
+  const {title, descriptionHtml, images} = product;
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
+      {images && images.nodes.length > 0 ? (
+        <ProductGallery images={images.nodes} />
+      ) : (
+        <ProductImage image={selectedVariant?.image} />
+      )}
       <div className="product-main">
         <h1>{title} XoX</h1>
         <ProductPrice
