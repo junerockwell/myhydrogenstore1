@@ -140,7 +140,7 @@ export default function Product() {
 
   return (
     <div className="product">
-      {images && images.nodes.length > 0 ? (
+      {images && images.nodes.length > 1 ? (
         <ProductImages images={images.nodes} />
       ) : (
         <ProductImage image={selectedVariant?.image} />
