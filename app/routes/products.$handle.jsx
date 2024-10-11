@@ -136,7 +136,8 @@ export default function Product() {
     variants,
   );
 
-  const {title, descriptionHtml, images} = product;
+  const {title, descriptionHtml, images, variantLinks} = product;
+  const {variantProducts} = variantLinks;
 
   return (
     <div className="product">
@@ -158,6 +159,7 @@ export default function Product() {
               product={product}
               selectedVariant={selectedVariant}
               variants={[]}
+              variantProducts={[]}
             />
           }
         >
@@ -170,6 +172,7 @@ export default function Product() {
                 product={product}
                 selectedVariant={selectedVariant}
                 variants={data?.product?.variants.nodes || []}
+                variantProducts={variantProducts?.nodes || []}
               />
             )}
           </Await>
@@ -271,6 +274,22 @@ const PRODUCT_FRAGMENT = `#graphql
         altText
         width
         height
+      }
+    }
+    variantLinks: metafield(key: "product_variant_reference_link_lists", namespace: "custom") {
+     	variantProducts: references(first: 10) {
+        nodes {
+          ...on Product {
+            title
+            handle
+            availableForSale
+            featuredImage {
+              altText
+              id
+              url
+            }
+          }
+        }
       }
     }
   }

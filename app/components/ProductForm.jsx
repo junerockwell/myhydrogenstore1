@@ -2,6 +2,7 @@ import {Link} from '@remix-run/react';
 import {VariantSelector} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
+import {ProductVariantLinks} from './ProductVariantLinks';
 
 /**
  * @param {{
@@ -10,7 +11,12 @@ import {useAside} from '~/components/Aside';
  *   variants: Array<ProductVariantFragment>;
  * }}
  */
-export function ProductForm({product, selectedVariant, variants}) {
+export function ProductForm({
+  product,
+  selectedVariant,
+  variants,
+  variantProducts,
+}) {
   const {open} = useAside();
   return (
     <div className="product-form">
@@ -21,6 +27,8 @@ export function ProductForm({product, selectedVariant, variants}) {
       >
         {({option}) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
+      <br />
+      <ProductVariantLinks products={variantProducts} />
       <br />
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
