@@ -18,7 +18,9 @@ export function SingleProductVariantLink({product}) {
   const {featuredImage} = product;
   return (
     <div
-      className={!product.availableForSale ? 'opacity-60' : 'border-2 rounded'}
+      className={`border-1 ${
+        !product.availableForSale ? 'opacity-30 bg-white' : ''
+      }`}
     >
       <Link to={`/products/${product.handle}`}>
         <Image

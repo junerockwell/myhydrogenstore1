@@ -137,7 +137,7 @@ export default function Product() {
   );
 
   const {title, descriptionHtml, images, variantLinks} = product;
-  const {variantProducts} = variantLinks;
+  const {variantProducts} = variantLinks || {};
 
   return (
     <div className="product">
