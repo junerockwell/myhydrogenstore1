@@ -16,6 +16,7 @@ export function ProductForm({
   selectedVariant,
   variants,
   variantProducts,
+  colorDisplay,
 }) {
   const {open} = useAside();
   return (
@@ -28,7 +29,10 @@ export function ProductForm({
         {({option}) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
       <br />
-      <ProductVariantLinks products={variantProducts} />
+      <ProductVariantLinks
+        products={variantProducts}
+        colorDisplay={colorDisplay}
+      />
       <br />
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}

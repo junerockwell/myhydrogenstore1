@@ -136,7 +136,7 @@ export default function Product() {
     variants,
   );
 
-  const {title, descriptionHtml, images, variantLinks} = product;
+  const {title, descriptionHtml, images, variantLinks, colorDisplay} = product;
   const {variantProducts} = variantLinks || {};
 
   return (
@@ -160,6 +160,7 @@ export default function Product() {
               selectedVariant={selectedVariant}
               variants={[]}
               variantProducts={[]}
+              colorDisplay=""
             />
           }
         >
@@ -173,6 +174,7 @@ export default function Product() {
                 selectedVariant={selectedVariant}
                 variants={data?.product?.variants.nodes || []}
                 variantProducts={variantProducts?.nodes || []}
+                colorDisplay={colorDisplay}
               />
             )}
           </Await>
@@ -291,6 +293,9 @@ const PRODUCT_FRAGMENT = `#graphql
           }
         }
       }
+    }
+    colorDisplay: metafield(key: "color_display", namespace: "custom") {
+      value
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
