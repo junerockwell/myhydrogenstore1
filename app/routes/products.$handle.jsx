@@ -11,6 +11,7 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import ProductImages from '~/components/ProductImages';
 import {ProductForm} from '~/components/ProductForm';
+import {OutOfStockStrikethrough} from '~/components/OutOfStockStrikethrough';
 
 /**
  * @type {MetaFunction<typeof loader>}

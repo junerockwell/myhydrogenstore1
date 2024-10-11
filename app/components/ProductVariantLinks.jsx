@@ -1,6 +1,7 @@
 import {Link} from '@remix-run/react';
 import {Image} from '@shopify/hydrogen';
 import {useLocation} from '@remix-run/react';
+import {OutOfStockStrikethrough} from './OutOfStockStrikethrough';
 
 export function ProductVariantLinks({products, colorDisplay}) {
   if (!products || products.length === 0) return null;
@@ -36,7 +37,10 @@ export function SingleProductVariantLink({product}) {
       className={`${!product.availableForSale ? 'opacity-30 bg-white' : ''}
       ${isActive ? 'border-3' : ''}`}
     >
-      <Link to={`/products/${product.handle}`}>
+      <Link
+        to={`/products/${product.handle}`}
+        className="relative overflow-hidden"
+      >
         <Image
           alt={
             featuredImage.altText || `${product.title} variant image clickable`
@@ -45,6 +49,19 @@ export function SingleProductVariantLink({product}) {
           data={featuredImage}
           sizes="(min-width: 45em) 50vw, 100vw"
         />
+        {!product.availableForSale && (
+          <OutOfStockStrikethrough
+            strokeWidth={6}
+            style={{
+              position: 'absolute',
+              top: 0,
+              zIndex: 1,
+              // width: '100%',
+              // height: '100%',
+              // cursor: 'pointer',
+            }}
+          />
+        )}
       </Link>
     </div>
   );
