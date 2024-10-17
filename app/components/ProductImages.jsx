@@ -4,6 +4,13 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Navigation, Pagination} from 'swiper/modules';
+import {useLocation} from '@remix-run/react';
+import {
+  getColorQueryParam,
+  getFilteredImagesByAltText,
+  queryParamExists,
+} from '~/helpers/variantImageFilter';
+import {PlaceholderImage} from './PlaceholderImage';
 
 /**
  * @param {{
@@ -78,14 +85,38 @@ export function ProductImageSlide({images, breakPointClasses}) {
 }
 
 export default function ProductImages({images}) {
+  const location = useLocation();
+  console.log('location: ', location?.search.substring(1));
+  const queries = location?.search?.substring(1);
+
   if (!images || images.length === 0) {
     return <EmptyProductImage className="product-images" />;
   }
-
+  console.log('queries: ', queries);
+  const exists = queryParamExists(queries, 'Color');
+  const currentSelectedColor = exists
+    ? getColorQueryParam(queries, 'Color')
+    : null;
+  console.log('currentSelectedColor: ', currentSelectedColor);
+  const filteredImages = exists
+    ? getFilteredImagesByAltText(images, currentSelectedColor)
+    : images;
   return (
     <>
-      <ProductGallery images={images} breakPointClasses="hidden md:grid" />
-      <ProductImageSlide images={images} breakPointClasses="block md:hidden" />
+      {filteredImages.length ? (
+        <>
+          <ProductGallery
+            images={filteredImages}
+            breakPointClasses="hidden md:grid"
+          />
+          <ProductImageSlide
+            images={filteredImages}
+            breakPointClasses="block md:hidden"
+          />
+        </>
+      ) : (
+        <PlaceholderImage altText="Placeholder" />
+      )}
     </>
   );
 }

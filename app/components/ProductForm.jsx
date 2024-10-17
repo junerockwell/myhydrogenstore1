@@ -20,6 +20,7 @@ export function ProductForm({
   colorDisplay,
 }) {
   const {open} = useAside();
+
   return (
     <div className="product-form">
       <ProductVariantLinks

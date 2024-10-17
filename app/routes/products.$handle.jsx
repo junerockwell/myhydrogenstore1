@@ -11,7 +11,6 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import ProductImages from '~/components/ProductImages';
 import {ProductForm} from '~/components/ProductForm';
-import {OutOfStockStrikethrough} from '~/components/OutOfStockStrikethrough';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -275,7 +274,7 @@ const PRODUCT_FRAGMENT = `#graphql
       description
       title
     }
-    images(first: 10) {
+    images(first: 100) {
       nodes {
         __typename
         id
