@@ -11,6 +11,7 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import ProductImages from '~/components/ProductImages';
 import {ProductForm} from '~/components/ProductForm';
+import {OutOfStockStrikethrough} from '~/components/OutOfStockStrikethrough';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -41,6 +42,10 @@ async function loadCriticalData({context, params, request}) {
   const {handle} = params;
   const {storefront} = context;
 
+  // const url = new URL(request.url);
+  // const queryShoeSize = url.searchParams.get('Shoe size');
+  // console.log('queryShoeSize: ', queryShoeSize);
+
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
@@ -66,6 +71,7 @@ async function loadCriticalData({context, params, request}) {
   if (firstVariantIsDefault) {
     product.selectedVariant = firstVariant;
   } else {
+    console.log('redirecting');
     // if no selected variant was returned from the selected options,
     // we redirect to the first variant's url with it's selected options applied
     if (!product.selectedVariant) {
@@ -75,6 +81,7 @@ async function loadCriticalData({context, params, request}) {
 
   return {
     product,
+    // queryShoeSize,
   };
 }
 
@@ -136,7 +143,7 @@ export default function Product() {
     variants,
   );
 
-  const {title, descriptionHtml, images, variantLinks} = product;
+  const {title, descriptionHtml, images, variantLinks, colorDisplay} = product;
   const {variantProducts} = variantLinks || {};
 
   return (
@@ -160,6 +167,7 @@ export default function Product() {
               selectedVariant={selectedVariant}
               variants={[]}
               variantProducts={[]}
+              colorDisplay=""
             />
           }
         >
@@ -173,6 +181,7 @@ export default function Product() {
                 selectedVariant={selectedVariant}
                 variants={data?.product?.variants.nodes || []}
                 variantProducts={variantProducts?.nodes || []}
+                colorDisplay={colorDisplay}
               />
             )}
           </Await>
@@ -291,6 +300,9 @@ const PRODUCT_FRAGMENT = `#graphql
           }
         }
       }
+    }
+    colorDisplay: metafield(key: "color_display", namespace: "custom") {
+      value
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
