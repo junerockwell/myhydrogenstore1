@@ -1,6 +1,5 @@
-import {Link} from '@remix-run/react';
+import {Link, useLocation} from '@remix-run/react';
 import {Image} from '@shopify/hydrogen';
-import {useLocation} from '@remix-run/react';
 import {OutOfStockStrikethrough} from './OutOfStockStrikethrough';
 
 export function ProductVariantLinks({products, colorDisplay}) {
@@ -38,7 +37,7 @@ export function SingleProductVariantLink({product}) {
       ${isActive ? 'border-3' : ''}`}
     >
       <Link
-        to={`/products/${product.handle}`}
+        to={`/products/${product.handle}${location.search}`}
         className="relative overflow-hidden"
       >
         <Image
