@@ -3,6 +3,7 @@ import {VariantSelector} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {ProductVariantLinks} from './ProductVariantLinks';
+import {OutOfStockStrikethrough} from '~/components/OutOfStockStrikethrough';
 
 /**
  * @param {{
@@ -21,6 +22,11 @@ export function ProductForm({
   const {open} = useAside();
   return (
     <div className="product-form">
+      <ProductVariantLinks
+        products={variantProducts}
+        colorDisplay={colorDisplay}
+      />
+      <br />
       <VariantSelector
         handle={product.handle}
         options={product.options.filter((option) => option.values.length > 1)}
@@ -29,11 +35,7 @@ export function ProductForm({
         {({option}) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
       <br />
-      <ProductVariantLinks
-        products={variantProducts}
-        colorDisplay={colorDisplay}
-      />
-      <br />
+
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
@@ -64,22 +66,31 @@ function ProductOptions({option}) {
   return (
     <div className="product-options" key={option.name}>
       <h5>{option.name}</h5>
-      <div className="product-options-grid">
+      <div className="grid grid-cols-10 gap-2">
         {option.values.map(({value, isAvailable, isActive, to}) => {
           return (
             <Link
-              className="product-options-item"
-              key={option.name + value}
               prefetch="intent"
               preventScrollReset
               replace
               to={to}
+              key={option.name + value}
+              className="relative overflow-hidden flex flex-col justify-center text-center border-1"
               style={{
-                border: isActive ? '1px solid black' : '1px solid transparent',
                 opacity: isAvailable ? 1 : 0.3,
+                aspectRatio: '1/1',
+                border: isActive && '1px solid black',
+                background: isActive && '#000',
+                color: isActive ? '#fff' : '#000',
               }}
             >
-              {value}
+              <p>{value}</p>
+              {!isAvailable && (
+                <OutOfStockStrikethrough
+                  strokeWidth={10}
+                  style={{position: 'absolute', top: 0, zIndex: 1}}
+                />
+              )}
             </Link>
           );
         })}

@@ -42,6 +42,10 @@ async function loadCriticalData({context, params, request}) {
   const {handle} = params;
   const {storefront} = context;
 
+  // const url = new URL(request.url);
+  // const queryShoeSize = url.searchParams.get('Shoe size');
+  // console.log('queryShoeSize: ', queryShoeSize);
+
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
@@ -67,6 +71,7 @@ async function loadCriticalData({context, params, request}) {
   if (firstVariantIsDefault) {
     product.selectedVariant = firstVariant;
   } else {
+    console.log('redirecting');
     // if no selected variant was returned from the selected options,
     // we redirect to the first variant's url with it's selected options applied
     if (!product.selectedVariant) {
@@ -76,6 +81,7 @@ async function loadCriticalData({context, params, request}) {
 
   return {
     product,
+    // queryShoeSize,
   };
 }
 
