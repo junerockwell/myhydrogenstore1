@@ -23,6 +23,8 @@ export async function loader({request, context}) {
     ? predictiveSearch({request, context})
     : regularSearch({request, context});
 
+  console.log('isPredictive: ', isPredictive);
+
   searchPromise.catch((error) => {
     console.error(error);
     return {term: '', result: null, error: error.message};
@@ -54,10 +56,14 @@ export default function SearchPage() {
           <>
             <input
               defaultValue={term}
+              value={searchTerm}
               name="q"
               placeholder="Search…"
               ref={inputRef}
               type="search"
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
             />
             &nbsp;
             <button type="submit">Search</button>
