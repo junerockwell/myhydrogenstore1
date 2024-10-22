@@ -55,7 +55,6 @@ export default function SearchPage() {
         {({inputRef}) => (
           <>
             <input
-              defaultValue={term}
               value={searchTerm}
               name="q"
               placeholder="Search…"
