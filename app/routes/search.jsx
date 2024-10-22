@@ -1,9 +1,10 @@
 import {json} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
+import {useLoaderData, Await} from '@remix-run/react';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {getEmptyPredictiveSearchResult} from '~/lib/search';
+import {Suspense, useState, useEffect} from 'react';
 
 /**
  * @type {MetaFunction}
@@ -36,6 +37,13 @@ export async function loader({request, context}) {
 export default function SearchPage() {
   /** @type {LoaderReturnData} */
   const {type, term, result, error} = useLoaderData();
+  console.log('term: ', term);
+  const [searchTerm, setSearchTerm] = useState(term || '');
+  useEffect(() => {
+    console.log('The term has changed to: ', term);
+    setSearchTerm(term);
+  }, [term]);
+
   if (type === 'predictive') return null;
 
   return (
@@ -56,20 +64,29 @@ export default function SearchPage() {
           </>
         )}
       </SearchForm>
-      {error && <p style={{color: 'red'}}>{error}</p>}
-      {!term || !result?.total ? (
-        <SearchResults.Empty />
-      ) : (
-        <SearchResults result={result} term={term}>
-          {({articles, pages, products, term}) => (
-            <div>
-              <SearchResults.Products products={products} term={term} />
-              <SearchResults.Pages pages={pages} term={term} />
-              <SearchResults.Articles articles={articles} term={term} />
-            </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={result}>
+          {(response) => (
+            <>
+              {error && <p style={{color: 'red'}}>{error}</p>}
+              {!term || !response?.total ? (
+                <SearchResults.Empty />
+              ) : (
+                <SearchResults result={response} term={term}>
+                  {({articles, pages, products, term}) => (
+                    <div>
+                      <SearchResults.Products products={products} term={term} />
+                      <SearchResults.Pages pages={pages} term={term} />
+                      <SearchResults.Articles articles={articles} term={term} />
+                    </div>
+                  )}
+                </SearchResults>
+              )}
+            </>
           )}
-        </SearchResults>
-      )}
+        </Await>
+      </Suspense>
+
       <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
     </div>
   );
