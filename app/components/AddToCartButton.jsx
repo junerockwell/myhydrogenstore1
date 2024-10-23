@@ -16,6 +16,7 @@ export function AddToCartButton({
   lines,
   onClick,
 }) {
+  console.log('AddToCartButton lines: ', lines);
   return (
     <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
       {(fetcher) => (
@@ -30,7 +31,7 @@ export function AddToCartButton({
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
           >
-            {children}
+            {children}%
           </button>
         </>
       )}

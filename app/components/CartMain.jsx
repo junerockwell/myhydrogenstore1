@@ -51,7 +51,7 @@ function CartEmpty({hidden = false}) {
       <br />
       <p>
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
-        started!
+        started! Hello hello
       </p>
       <br />
       <Link to="/collections" onClick={close} prefetch="viewport">
