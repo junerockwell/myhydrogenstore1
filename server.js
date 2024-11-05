@@ -1,9 +1,14 @@
 // @ts-ignore
 // Virtual entry point for the app
 import * as remixBuild from 'virtual:remix/server-build';
-import {storefrontRedirect} from '@shopify/hydrogen';
+import {
+  createCartHandler,
+  storefrontRedirect,
+  createCustomerAccountClient,
+} from '@shopify/hydrogen';
 import {createRequestHandler} from '@shopify/remix-oxygen';
 import {createAppLoadContext} from '~/lib/context';
+import {AppSession} from '~/lib/session';
 
 /**
  * Export a fetch handler in module format.
@@ -17,11 +22,29 @@ export default {
    */
   async fetch(request, env, executionContext) {
     try {
+      const waitUntil = executionContext.waitUntil.bind(executionContext);
+      const session = await AppSession.init(request, [env.SESSION_SECRET]);
+
+      const customerAccount = createCustomerAccountClient({
+        waitUntil,
+        request,
+        session,
+        customerAccountId: env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID,
+        customerAccountUrl: env.PUBLIC_CUSTOMER_ACCOUNT_API_URL,
+        shopId: env.PUBLIC_STOREFRONT_ID,
+      });
+
       const appLoadContext = await createAppLoadContext(
         request,
         env,
         executionContext,
       );
+
+      // createCartHandler({
+      //   customerAccount,
+      //   appLoadContext,
+      //   // additional options here
+      // });
 
       /**
        * Create a Remix request handler and pass
@@ -30,7 +53,10 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: () => appLoadContext,
+        getLoadContext: () => ({
+          customerAccount,
+          appLoadContext,
+        }),
       });
 
       const response = await handleRequest(request);

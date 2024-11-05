@@ -20,7 +20,7 @@ import {redirect} from '@shopify/remix-oxygen';
  * @param {LoaderFunctionArgs}
  */
 export async function loader({request, context, params}) {
-  const {cart} = context;
+  const {cart} = context.appLoadContext;
   const {lines} = params;
   if (!lines) return redirect('/cart');
   const linesMap = lines.split(',').map((line) => {

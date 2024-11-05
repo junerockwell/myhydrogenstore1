@@ -43,8 +43,8 @@ export async function loader(args) {
  */
 async function loadCriticalData({context}) {
   const criticalData = await Promise.all([
-    context.storefront.query(NEWEST_COLLECTION_QUERY),
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
+    context.appLoadContext.storefront.query(NEWEST_COLLECTION_QUERY),
+    context.appLoadContext.storefront.query(FEATURED_COLLECTION_QUERY),
     // Add other queries here, so that they are loaded in parallel
   ]);
   // console.log('collections 1: ', criticalData);
@@ -61,7 +61,7 @@ async function loadCriticalData({context}) {
  * @param {LoaderFunctionArgs}
  */
 function loadDeferredData({context}) {
-  const recommendedProducts = context.storefront
+  const recommendedProducts = context.appLoadContext.storefront
     .query(RECOMMENDED_PRODUCTS_QUERY2)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
@@ -75,7 +75,7 @@ function loadDeferredData({context}) {
 }
 
 function loadAdditionalDeferredData({context}) {
-  const recentlyAddedProducts = context.storefront
+  const recentlyAddedProducts = context.appLoadContext.storefront
     .query(RECENTLY_ADDED_PRODUCTS_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
@@ -89,7 +89,7 @@ function loadAdditionalDeferredData({context}) {
 }
 
 function loadBestSellersDefferedData({context}) {
-  const bestSellersCollection = context.storefront
+  const bestSellersCollection = context.appLoadContext.storefront
     .query(BESTSELLERS_COLLECTION_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render

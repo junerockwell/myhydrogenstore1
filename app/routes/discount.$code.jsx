@@ -13,7 +13,7 @@ import {redirect} from '@shopify/remix-oxygen';
  * @param {LoaderFunctionArgs}
  */
 export async function loader({request, context, params}) {
-  const {cart} = context;
+  const {cart} = context.appLoadContext;
   const {code} = params;
 
   const url = new URL(request.url);

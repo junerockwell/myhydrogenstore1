@@ -30,7 +30,7 @@ export async function loader(args) {
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({context, request}) {
-  const {storefront} = context;
+  const {storefront} = context.appLoadContext;
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
   });

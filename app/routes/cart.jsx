@@ -15,7 +15,7 @@ export const meta = () => {
  * @param {ActionFunctionArgs}
  */
 export async function action({request, context}) {
-  const {cart} = context;
+  const {cart} = context.appLoadContext;
 
   const formData = await request.formData();
 
