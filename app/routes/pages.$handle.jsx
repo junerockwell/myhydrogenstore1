@@ -32,7 +32,7 @@ async function loadCriticalData({context, params}) {
   }
 
   const [{page}] = await Promise.all([
-    context.appLoadContext.storefront.query(PAGE_QUERY, {
+    context.storefront.query(PAGE_QUERY, {
       variables: {
         handle: params.handle,
       },

@@ -35,7 +35,7 @@ async function loadCriticalData({context, params}) {
   }
 
   const [{blog}] = await Promise.all([
-    context.appLoadContext.storefront.query(ARTICLE_QUERY, {
+    context.storefront.query(ARTICLE_QUERY, {
       variables: {blogHandle, articleHandle},
     }),
     // Add other queries here, so that they are loaded in parallel

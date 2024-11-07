@@ -5,7 +5,7 @@ import {useLoaderData, Link} from '@remix-run/react';
  * @param {LoaderFunctionArgs}
  */
 export async function loader({context}) {
-  const data = await context.appLoadContext.storefront.query(POLICIES_QUERY);
+  const data = await context.storefront.query(POLICIES_QUERY);
   const policies = Object.values(data.shop || {});
 
   if (!policies.length) {

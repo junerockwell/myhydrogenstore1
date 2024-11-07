@@ -10,7 +10,7 @@ const MAX_URLS = 250;
  * @param {LoaderFunctionArgs}
  */
 export async function loader({request, context}) {
-  const {storefront} = context.appLoadContext;
+  const {storefront} = context;
   const data = await storefront.query(SITEMAP_QUERY, {
     variables: {
       urlLimits: MAX_URLS,

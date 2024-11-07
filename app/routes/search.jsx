@@ -20,8 +20,8 @@ export async function loader({request, context}) {
   const url = new URL(request.url);
   const isPredictive = url.searchParams.has('predictive');
   const searchPromise = isPredictive
-    ? predictiveSearch({request, context: context.appLoadContext})
-    : regularSearch({request, context: context.appLoadContext});
+    ? predictiveSearch({request, context})
+    : regularSearch({request, context});
 
   console.log('isPredictive: ', isPredictive);
 

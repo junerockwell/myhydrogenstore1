@@ -34,7 +34,7 @@ async function loadCriticalData({context, request}) {
   });
 
   const [{blogs}] = await Promise.all([
-    context.appLoadContext.storefront.query(BLOGS_QUERY, {
+    context.storefront.query(BLOGS_QUERY, {
       variables: {
         ...paginationVariables,
       },

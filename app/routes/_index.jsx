@@ -20,6 +20,9 @@ export const meta = () => {
  * @param {LoaderFunctionArgs} args
  */
 export async function loader(args) {
+  // console.log('homepage loader x: ', args.context.customerAccount);
+  // args.context.customerAccount.login();
+  // console.log('homepage loader y: ', args.context.storefront);
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
   console.log('deferredData: ', deferredData);
@@ -43,8 +46,8 @@ export async function loader(args) {
  */
 async function loadCriticalData({context}) {
   const criticalData = await Promise.all([
-    context.appLoadContext.storefront.query(NEWEST_COLLECTION_QUERY),
-    context.appLoadContext.storefront.query(FEATURED_COLLECTION_QUERY),
+    context.storefront.query(NEWEST_COLLECTION_QUERY),
+    context.storefront.query(FEATURED_COLLECTION_QUERY),
     // Add other queries here, so that they are loaded in parallel
   ]);
   // console.log('collections 1: ', criticalData);
@@ -61,7 +64,7 @@ async function loadCriticalData({context}) {
  * @param {LoaderFunctionArgs}
  */
 function loadDeferredData({context}) {
-  const recommendedProducts = context.appLoadContext.storefront
+  const recommendedProducts = context.storefront
     .query(RECOMMENDED_PRODUCTS_QUERY2)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
@@ -75,7 +78,7 @@ function loadDeferredData({context}) {
 }
 
 function loadAdditionalDeferredData({context}) {
-  const recentlyAddedProducts = context.appLoadContext.storefront
+  const recentlyAddedProducts = context.storefront
     .query(RECENTLY_ADDED_PRODUCTS_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
@@ -89,7 +92,7 @@ function loadAdditionalDeferredData({context}) {
 }
 
 function loadBestSellersDefferedData({context}) {
-  const bestSellersCollection = context.appLoadContext.storefront
+  const bestSellersCollection = context.storefront
     .query(BESTSELLERS_COLLECTION_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render

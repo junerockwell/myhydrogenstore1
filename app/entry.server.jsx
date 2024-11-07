@@ -20,8 +20,8 @@ export default async function handleRequest(
   console.log('$$$ context: ', context);
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
-      checkoutDomain: context.appLoadContext.env.PUBLIC_CHECKOUT_DOMAIN,
-      storeDomain: context.appLoadContext.env.PUBLIC_STORE_DOMAIN,
+      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
+      storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
     connectSrc: [
       // (ie. 'wss://<your-ngrok-domain>.app:*')

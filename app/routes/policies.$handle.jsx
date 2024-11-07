@@ -20,19 +20,16 @@ export async function loader({params, context}) {
     m1.toUpperCase(),
   );
 
-  const data = await context.appLoadContext.storefront.query(
-    POLICY_CONTENT_QUERY,
-    {
-      variables: {
-        privacyPolicy: false,
-        shippingPolicy: false,
-        termsOfService: false,
-        refundPolicy: false,
-        [policyName]: true,
-        language: context.appLoadContext.storefront.i18n?.language,
-      },
+  const data = await context.storefront.query(POLICY_CONTENT_QUERY, {
+    variables: {
+      privacyPolicy: false,
+      shippingPolicy: false,
+      termsOfService: false,
+      refundPolicy: false,
+      [policyName]: true,
+      language: context.storefront.i18n?.language,
     },
-  );
+  });
 
   const policy = data.shop?.[policyName];
 

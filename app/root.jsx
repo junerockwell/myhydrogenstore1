@@ -65,7 +65,7 @@ export async function loader(args) {
 
   console.log('criticalData: ', criticalData);
 
-  const {storefront, env} = args.context.appLoadContext;
+  const {storefront, env} = args.context;
 
   return defer({
     ...deferredData,
@@ -80,8 +80,8 @@ export async function loader(args) {
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       withPrivacyBanner: true,
       // localize the privacy banner
-      country: args.context.appLoadContext.storefront.i18n.country,
-      language: args.context.appLoadContext.storefront.i18n.language,
+      country: args.context.storefront.i18n.country,
+      language: args.context.storefront.i18n.language,
     },
   });
 }
@@ -92,7 +92,7 @@ export async function loader(args) {
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({context}) {
-  const {storefront} = context.appLoadContext;
+  const {storefront} = context;
 
   const [header] = await Promise.all([
     storefront.query(HEADER_QUERY, {
@@ -117,7 +117,7 @@ async function loadCriticalData({context}) {
  */
 function loadDeferredData({context}) {
   console.log('x loadDefferedData: ', context);
-  const {storefront, customerAccount, cart} = context.appLoadContext;
+  const {storefront, customerAccount, cart} = context;
   // const _customerAccount = context.customerAccount;
   // console.log('_customerAccount: ', _customerAccount);
   console.log('x0x_customerAccount: ', customerAccount);
