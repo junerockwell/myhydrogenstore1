@@ -2,7 +2,7 @@
   "name": "myhydrogenstore1",
   "private": true,
   "sideEffects": false,
-  "version": "2024.7.8",
+  "version": "2024.10.0",
   "type": "module",
   "scripts": {
     "build": "shopify hydrogen build --codegen",
