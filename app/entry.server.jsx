@@ -17,11 +17,16 @@ export default async function handleRequest(
   remixContext,
   context,
 ) {
+  console.log('$$$ context: ', context);
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    connectSrc: [
+      // (ie. 'wss://<your-ngrok-domain>.app:*')
+      'wss://eager-doe-renewed.ngrok-free.app:*',
+    ],
   });
 
   const body = await renderToReadableStream(

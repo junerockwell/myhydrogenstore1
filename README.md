@@ -36,8 +36,16 @@ npm run build
 
 ## Local development
 
+In one terminal:
+
 ```bash
 npm run dev
+```
+
+Once the local store is running, run Ngrok:
+
+```bash
+ngrok http http://localhost:3000
 ```
 
 ## Setup for using Customer Account API (`/account` section)

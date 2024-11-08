@@ -19,6 +19,7 @@ export async function loader({params, context}) {
   }
 
   const orderId = atob(params.id);
+  console.log('order details', orderId);
   const {data, errors} = await context.customerAccount.query(
     CUSTOMER_ORDER_QUERY,
     {
@@ -31,10 +32,18 @@ export async function loader({params, context}) {
   }
 
   const {order} = data;
+  console.log('order.fulfillments: ', order.fulfillments.nodes);
+  console.log(
+    'flattenConnection(order.fulfillments)',
+    flattenConnection(order.fulfillments),
+  );
 
   const lineItems = flattenConnection(order.lineItems);
   const discountApplications = flattenConnection(order.discountApplications);
-  const fulfillmentStatus = flattenConnection(order.fulfillments)[0].status;
+  const fulfillmentStatus =
+    flattenConnection(order.fulfillments).length > 0
+      ? flattenConnection(order.fulfillments)[0].status
+      : 'RECEIVED';
 
   const firstDiscount = discountApplications[0]?.value;
 

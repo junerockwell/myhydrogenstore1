@@ -116,8 +116,12 @@ async function loadCriticalData({context}) {
  * @param {LoaderFunctionArgs}
  */
 function loadDeferredData({context}) {
+  console.log('x loadDefferedData: ', context);
   const {storefront, customerAccount, cart} = context;
-
+  // const _customerAccount = context.customerAccount;
+  // console.log('_customerAccount: ', _customerAccount);
+  console.log('x0x_customerAccount: ', customerAccount);
+  console.log('$$$ storefront', storefront);
   // defer the footer query (below the fold)
   const footer = storefront
     .query(FOOTER_QUERY, {
@@ -131,6 +135,11 @@ function loadDeferredData({context}) {
       console.error(error);
       return null;
     });
+  console.log('footer: ', footer);
+  // console.log(
+  //   'customerAccount.getAccessToken(): ',
+  //   customerAccount.getAccessToken(),
+  // );
   return {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
