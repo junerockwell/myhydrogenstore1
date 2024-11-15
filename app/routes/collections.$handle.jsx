@@ -25,8 +25,14 @@ export async function loader(args) {
 
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
+  console.log('collection.$handle: criticalData', criticalData.collection);
+  // Generate the SEO data for the collection page
 
-  return defer({...deferredData, ...criticalData});
+  const seo = criticalData?.collection
+    ? generateSEO(criticalData.collection)
+    : {};
+
+  return defer({...deferredData, ...criticalData, ...seo});
 }
 
 /**
@@ -72,6 +78,29 @@ async function loadCriticalData({context, params, request}) {
 function loadDeferredData({context}) {
   return {};
 }
+
+// Function to generate SEO data for the collection page
+const generateSEO = (collection) => {
+  console.log('generateSEO: ', collection);
+  let seo = {
+    title: 'Default Collection Title', // Default title in case the collection doesn't have a title
+    description: 'Default Collection Description', // Default description in case the collection doesn't have a description
+  };
+
+  if (collection) {
+    // If collection has title and description, use them for SEO
+    seo.title = collection.title || seo.title;
+    seo.description = collection.description || seo.description;
+  }
+
+  // Truncate the description to 155 characters if needed
+  seo.description =
+    seo.description.length > 155
+      ? `${seo.description.slice(0, 152)}...`
+      : seo.description;
+
+  return seo;
+};
 
 export default function Collection() {
   /** @type {LoaderReturnData} */
