@@ -1,10 +1,9 @@
 import {Link} from '@remix-run/react';
-import {VariantSelector} from '@shopify/hydrogen';
+import {VariantSelector, ShopPayButton} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {ProductVariantLinks} from './ProductVariantLinks';
 import {OutOfStockStrikethrough} from '~/components/OutOfStockStrikethrough';
-
 /**
  * @param {{
  *   product: ProductFragment;
@@ -56,6 +55,10 @@ export function ProductForm({
       >
         {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
       </AddToCartButton>
+      <AddVariantQuantity1
+        variantId={selectedVariant.id}
+        storeDomain={'https://myhydrogenstore1.myshopify.com'}
+      />
     </div>
   );
 }
@@ -101,6 +104,18 @@ function ProductOptions({option}) {
   );
 }
 
+export function AddVariantQuantity1({variantId, storeDomain}) {
+  return <ShopPayButton variantIds={[variantId]} storeDomain={storeDomain} />;
+}
+
+export function AddVariantQuantityMultiple({variantId, quantity, storeDomain}) {
+  return (
+    <ShopPayButton
+      variantIdsAndQuantities={[{id: variantId, quantity}]}
+      storeDomain={storeDomain}
+    />
+  );
+}
 /** @typedef {import('@shopify/hydrogen').VariantOption} VariantOption */
 /** @typedef {import('storefrontapi.generated').ProductFragment} ProductFragment */
 /** @typedef {import('storefrontapi.generated').ProductVariantFragment} ProductVariantFragment */
