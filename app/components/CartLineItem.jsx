@@ -3,7 +3,7 @@ import {useVariantUrl} from '~/lib/variants';
 import {Link} from '@remix-run/react';
 import {ProductPrice} from './ProductPrice';
 import {useAside} from './Aside';
-
+const MAX_QUANTITY = 3;
 /**
  * A single line item in the cart. It displays the product image, title, price.
  * It also provides controls to update the quantity or remove the line item.
@@ -92,7 +92,7 @@ function CartLineQuantity({line}) {
           aria-label="Increase quantity"
           name="increase-quantity"
           value={nextQuantity}
-          disabled={!!isOptimistic}
+          disabled={nextQuantity > MAX_QUANTITY || !!isOptimistic}
         >
           <span>&#43;</span>
         </button>
